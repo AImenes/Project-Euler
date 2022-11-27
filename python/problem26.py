@@ -12,22 +12,40 @@
 Where 0.1(6) means 0.166666..., and has a 1-digit recurring cycle. It can be seen that 1/7 has a 6-digit recurring cycle.
 
 Find the value of d < 1000 for which 1/d contains the longest recurring cycle in its decimal fraction part.'''
-from decimal import *
-import math
 import time 
 
 def prob26(upper):
-	for d in range(7, upper):
-		if not (d & (d-1) == 0):
-			temp = 1/d
-			temp *= 10
-			print(d, 1/d, temp)
+	highest_result = [0,0]
+	for d in range(3,upper):
+		used_remainders = list()
 
-	return None
+		if not (d & (d-1) == 0):
+			if d < 10:
+				numerator = 10
+			elif d >= 10 and d < 100:
+				numerator = 100
+			else:
+				numerator = 1000
+
+			counter = 1
+			rest = (numerator % d) * 10
+
+			while (not (rest == numerator or rest == 0)) and rest not in used_remainders:
+				used_remainders.append(rest)
+				rest = (rest % d) * 10
+				counter += 1
+
+		if counter > highest_result[1]:
+			highest_result[0], highest_result[1] = d, counter
+
+	return highest_result
 
 def main():
-	upper = 30
+	upper = 1000
+	start = time.time()
 	print(prob26(upper))
+	end = time.time()
+	print(end-start,"s")
 
 if __name__ == "__main__":
 	main()
